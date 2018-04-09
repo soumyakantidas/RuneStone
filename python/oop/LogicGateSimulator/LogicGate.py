@@ -45,3 +45,23 @@ class AND(BinaryGate):
         b = self.get_pinB()
 
         return a and b
+
+
+class OR(BinaryGate):
+    def __init__(self, label):
+        BinaryGate.__init__(self, label)
+
+    def perform_gate_logic(self):
+        a = self.get_pinA()
+        b = self.get_pinB()
+
+        return a or b
+
+
+class NOT(UnaryGate):
+    def __init__(self, label):
+        UnaryGate.__init__(self, label)
+
+    def perform_gate_logic(self):
+        pin = self.get_pin()
+        return 0 if pin == 1 else 0
