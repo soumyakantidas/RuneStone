@@ -12,6 +12,9 @@ class LogicGate(object):
         self.output = self.perform_gate_logic()
         return self.output
 
+    def perform_gate_logic(self):
+        pass
+
 
 class BinaryGate(LogicGate):
 
