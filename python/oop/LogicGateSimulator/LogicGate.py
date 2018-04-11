@@ -100,6 +100,28 @@ class NOT(UnaryGate):
         return 0 if pin == 1 else 1
 
 
+class NAND(BinaryGate):
+    def __init__(self, label):
+        BinaryGate.__init__(self, label)
+        self.and_gate = AND("NAND-INTERNAL-AND")
+        self.not_gate = NOT("NAND-INTERNAL-NOT")
+        self.connector = Connector(self.and_gate, self.not_gate)
+
+    def perform_gate_logic(self):
+        return self.not_gate.get_output()
+
+
+class NOR(BinaryGate):
+    def __init__(self, label):
+        BinaryGate.__init__(self, label)
+        self.or_gate = OR("NOR-INTERNAL-OR")
+        self.not_gate = NOT("NOR-INTERNAL-NOT")
+        self.connector = Connector(self.or_gate, self.not_gate)
+
+    def perform_gate_logic(self):
+        return self.not_gate.get_output()
+
+
 class Connector:
 
     def __init__(self, fgate, tgate):
