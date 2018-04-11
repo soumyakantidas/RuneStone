@@ -10,9 +10,13 @@ class LogicGate(object):
 
     def get_output(self):
         self.output = self.perform_gate_logic()
+        print("Output of " + self.get_label() + " : " + str(self.output))
         return self.output
 
     def perform_gate_logic(self):
+        pass
+
+    def set_next_pin(self, source):
         pass
 
 
@@ -23,10 +27,24 @@ class BinaryGate(LogicGate):
         self.pinA, self.pinB = None, None
 
     def get_pinA(self):
-        return int(input("Enter pin A for gate " + self.get_label() + ":  "))
+        if self.pinA is None:
+            return int(input("Enter pin A for gate " + self.get_label() + ":  "))
+        else:
+            return self.pinA.get_output()
 
     def get_pinB(self):
-        return int(input("Enter pin B for gate " + self.get_label() + ":  "))
+        if self.pinB is None:
+            return int(input("Enter pin B for gate " + self.get_label() + ":  "))
+        else:
+            return self.pinB.get_output()
+
+    def set_next_pin(self, source):
+        if self.pinA is None:
+            self.pinA = source
+        elif self.pinB is None:
+            self.pinB = source
+        else:
+            raise RuntimeError("No Empty Pins")
 
 
 class UnaryGate(LogicGate):
@@ -35,7 +53,16 @@ class UnaryGate(LogicGate):
         self.pin = None
 
     def get_pin(self):
-        return int(input("Enter pin for gate " + self.get_label() + ":  "))
+        if self.pin is None:
+            return int(input("Enter pin for gate " + self.get_label() + ":  "))
+        else:
+            return self.pin.get_output()
+
+    def set_next_pin(self, source):
+        if self.pin is None:
+            self.pin = source
+        else:
+            raise RuntimeError("No Empty Pin")
 
 
 class AND(BinaryGate):
@@ -57,6 +84,8 @@ class OR(BinaryGate):
     def perform_gate_logic(self):
         a = self.get_pinA()
         b = self.get_pinB()
+        print("PinA of " + self.get_label() + " : " + str(a))
+        print("PinB of " + self.get_label() + " : " + str(b))
 
         return a or b
 
@@ -67,4 +96,19 @@ class NOT(UnaryGate):
 
     def perform_gate_logic(self):
         pin = self.get_pin()
-        return 0 if pin == 1 else 0
+        print("Pin of " + self.get_label() + " : " + str(pin))
+        return 0 if pin == 1 else 1
+
+
+class Connector:
+
+    def __init__(self, fgate, tgate):
+        self.fgate = fgate
+        self.tgate = tgate
+        tgate.set_next_pin(self.fgate)
+
+    def get_fgate(self):
+        return self.fgate
+
+    def get_tgate(self):
+        return self.tgate

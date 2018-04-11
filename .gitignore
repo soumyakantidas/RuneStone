@@ -1,2 +1,5 @@
 /.idea/*
+/.idea/
+/.idea/workspace.xml
+/python/oop/LogicGateSimulator/__pycache__/
 
