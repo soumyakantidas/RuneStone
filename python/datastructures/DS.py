@@ -19,3 +19,6 @@ class Stack:
 
     def clear(self):
         self.stack = []
+
+    def is_not_empty(self):
+        return not self.is_empty()
