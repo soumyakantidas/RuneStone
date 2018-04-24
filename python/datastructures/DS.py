@@ -55,6 +55,12 @@ class Node:
         self.value = value
         self.next = None
 
+    def __str__(self):
+        if self.next is None:
+            return "{}  ----->  {}".format(self.value, self.next)
+        else:
+            return "{}  ----->  {}".format(self.value, self.next.value)
+
 
 class LinkedList:
     def __init__(self):
@@ -107,7 +113,21 @@ class LinkedList:
         if found:
             previous.next = current.next
 
+    def reverse(self):
+        if self.head is None or self.head.next is None:
+            pass
+        else:
+            prev = None
+            curr = self.head
+            while curr is not None:
+                # print("prev:", prev, "curr:", curr)
+                rem = curr.next
+                curr.next = prev
+                prev = curr
+                curr = rem
+                # print("prev:", prev, "curr:", curr)
 
+            self.head = prev
 
     def __str__(self):
         li = []
