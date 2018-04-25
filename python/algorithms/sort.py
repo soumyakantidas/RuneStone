@@ -1,5 +1,6 @@
 from random import randint
 from time import time
+from math import log
 
 
 class Sort:
@@ -99,6 +100,36 @@ class Sort:
         self.time = time() - t1
         return arr
 
+    def shell(self, arr):
+        self.name = "SHELL"
+        self.size = len(arr)
+        self.swaps = 0
+        self.comparisons = 0
+        self.time = 0
+
+        t1 = time()
+        k = int(log(len(arr)+1, 2))
+        gap = 2**k - 1
+        # gap = len(arr)//2
+        while gap > 0:
+            for i in range(gap, len(arr)):
+                for j in range(i-gap, -1, -gap):
+                    self.comparisons += 1
+                    # print("gap:", gap, "i:", i, "j:", j, "j+gap:", j+gap)
+                    # print(arr[j], arr[j+gap])
+                    if arr[j+gap] < arr[j]:
+                        arr[j+gap], arr[j] = arr[j], arr[j+gap]
+                        # print(arr)
+                        self.swaps += 1
+                    else:
+                        break
+            # gap //= 2
+            k -= 1
+            gap = 2**k - 1
+
+        self.time = time() - t1
+        return arr
+
     def __str__(self):
         return "sort: {}, list size: {}, comparisons: {}, swaps: {}, time taken: {}".format(
             self.name, self.size, self.comparisons, self.swaps, round(self.time, 6))
@@ -110,7 +141,7 @@ def partially_sort(arr, percent=80):
     if percent == 100:
         percent = 99
     for i in range(len(arr)//(100//(100-percent))):
-        i = randint(0, len(arr)-distance)
+        i = randint(0, len(arr)-distance-1)
         j = randint(1, distance)
         arr[i], arr[i+j] = arr[i+j], arr[i]
     return arr
@@ -119,7 +150,7 @@ def partially_sort(arr, percent=80):
 if __name__ == "__main__":
     size = 4000
     li = [randint(0, 10000) for _ in range(size)]
-    # li = partially_sort(li, 90)
+    # li = partially_sort(li, 10)
     # print(li)
     # li.sort()
     # li = [10, 16, 25, 26, 27, 33, 45, 46, 46, 48, 49, 78, 60, 67, 51, 70, 88, 91, 94, 99]
@@ -133,4 +164,6 @@ if __name__ == "__main__":
     print(s.selection(li.copy()))
     print(s)
     print(s.insertion(li.copy()))
+    print(s)
+    print(s.shell(li.copy()))
     print(s)
