@@ -217,14 +217,27 @@ class Sort:
 
             array[pivot], array[right] = array[right], array[pivot]
             self.swaps += 1
+            # print(array[pivot], array)
 
             return right
 
         def quick_sort(array, first, last):
-            if first < last:
+            partition_limit = 10
+            partition_size = last - first + 1
+
+            if partition_size > partition_limit:
                 split = partition(array, first, last)
                 quick_sort(array, first, split-1)
                 quick_sort(array, split+1, last)
+            else:
+                for i in range(first+1, last+1):
+                    for j in range(i-1, first-1, -1):
+                        self.comparisons += 1
+                        if array[j+1] < array[j]:
+                            array[j+1], array[j] = array[j], array[j+1]
+                            self.swaps += 1
+                        else:
+                            break
 
         t1 = time()
         quick_sort(arr, 0, len(arr)-1)
@@ -249,15 +262,16 @@ def partially_sort(arr, percent=80):
 
 
 if __name__ == "__main__":
-    size = 100000
-    li = [randint(0, 10000) for _ in range(size)]
+    size = 30
+    li = [randint(0, 100) for _ in range(size)]
     # li = partially_sort(li)
     # print(li)
     # li.sort()
     # li = [10, 16, 25, 26, 27, 33, 45, 46, 46, 48, 49, 78, 60, 67, 51, 70, 88, 91, 94, 99]
     # li = [54, 26, 93, 17, 77, 31, 44, 55, 20]
     # li = [1, 3, 2, 4, 5, 5, 4, 5, 3, 4, 6, 7, 5, 8, 9, 8]
-    li = [i for i in "PYTHON"]
+    # li = [4, 2, 6, 3, 8, 7, 1, 2, 5, 3, 8, 4, 5, 0, 8, 5, 7, 3, 8, 4, 2, 1, 6, 3]
+    # li = [i for i in "PYTHON"]
     s = Sort()
     # s.bubble(li.copy())
     # print(s)
@@ -269,7 +283,7 @@ if __name__ == "__main__":
     # print(s)
     # s.shell(li.copy())
     # print(s)
-    print(s.merge(li.copy()))
-    print(s)
-    print(s.quick(li.copy()))
+    # s.merge(li.copy())
+    # print(s)
+    s.quick(li.copy())
     print(s)
