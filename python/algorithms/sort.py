@@ -130,6 +130,54 @@ class Sort:
         self.time = time() - t1
         return arr
 
+    def merge(self, arr):
+        self.name = "MERGE"
+        self.size = len(arr)
+        self.swaps = 0
+        self.comparisons = 0
+        self.time = 0
+
+        def merge_sort(array):
+            # print("Splitting ", array)
+            if len(array) > 1:
+                mid = len(array)//2
+                left = array[:mid]
+                right = array[mid:]
+
+                merge_sort(left)
+                merge_sort(right)
+
+                i, j, k = 0, 0, 0
+                while i < len(left) and j < len(right):
+                    self.comparisons += 1
+                    self.swaps += 1
+                    if left[i] < right[j]:
+                        array[k] = left[i]
+                        i += 1
+                    else:
+                        array[k] = right[j]
+                        j += 1
+                    k += 1
+
+                while i < len(left):
+                    self.swaps += 1
+                    array[k] = left[i]
+                    i += 1
+                    k += 1
+                while j < len(right):
+                    self.swaps += 1
+                    array[k] = right[j]
+                    j += 1
+                    k += 1
+                # print("Merging ", array)
+            return array
+
+        t1 = time()
+        result = merge_sort(arr)
+        self.time = time() - t1
+
+        return result
+
     def __str__(self):
         return "sort: {}, list size: {}, comparisons: {}, swaps: {}, time taken: {}".format(
             self.name, self.size, self.comparisons, self.swaps, round(self.time, 6))
@@ -148,22 +196,24 @@ def partially_sort(arr, percent=80):
 
 
 if __name__ == "__main__":
-    size = 4000
+    size = 10000
     li = [randint(0, 10000) for _ in range(size)]
-    # li = partially_sort(li, 10)
+    li = partially_sort(li)
     # print(li)
     # li.sort()
     # li = [10, 16, 25, 26, 27, 33, 45, 46, 46, 48, 49, 78, 60, 67, 51, 70, 88, 91, 94, 99]
     # li = [54, 26, 93, 17, 77, 31, 44, 55, 20]
     # li = [1, 3, 2, 4, 5, 5, 4, 5, 3, 4, 6, 7, 5, 8, 9, 8]
     s = Sort()
-    print(s.bubble(li.copy()))
+    s.bubble(li.copy())
     print(s)
-    print(s.bubble_short(li.copy()))
+    s.bubble_short(li.copy())
     print(s)
-    print(s.selection(li.copy()))
+    s.selection(li.copy())
     print(s)
-    print(s.insertion(li.copy()))
+    s.insertion(li.copy())
     print(s)
-    print(s.shell(li.copy()))
+    s.shell(li.copy())
+    print(s)
+    s.merge(li.copy())
     print(s)
