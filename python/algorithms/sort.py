@@ -178,6 +178,59 @@ class Sort:
 
         return result
 
+    def quick(self, arr):
+        self.name = "QUICK"
+        self.size = len(arr)
+        self.swaps = 0
+        self.comparisons = 0
+        self.time = 0
+
+        def choose_pivot(array, first, last):
+            mid = (first + last) // 2
+            temp_list = [(array[first], first), (array[mid], mid), (array[last], last)]
+            temp_list.sort(key=lambda x: x[0])
+            return temp_list[1][1]
+
+        def partition(array, first, last):
+            pivot = choose_pivot(array, first, last)
+            pivot_value = array[pivot]
+            array[first], array[pivot] = array[pivot], array[first]
+            self.swaps += 1
+            pivot = first
+            left = first+1
+            right = last
+            done = False
+
+            while not done:
+                while left <= right and array[left] <= pivot_value:
+                    self.comparisons += 1
+                    left += 1
+                while left <= right and array[right] >= pivot_value:
+                    self.comparisons += 1
+                    right -= 1
+
+                if left > right:
+                    done = True
+                else:
+                    array[left], array[right] = array[right], array[left]
+                    self.swaps += 1
+
+            array[pivot], array[right] = array[right], array[pivot]
+            self.swaps += 1
+
+            return right
+
+        def quick_sort(array, first, last):
+            if first < last:
+                split = partition(array, first, last)
+                quick_sort(array, first, split-1)
+                quick_sort(array, split+1, last)
+
+        t1 = time()
+        quick_sort(arr, 0, len(arr)-1)
+        self.time = time() - t1
+        return arr
+
     def __str__(self):
         return "sort: {}, list size: {}, comparisons: {}, swaps: {}, time taken: {}".format(
             self.name, self.size, self.comparisons, self.swaps, round(self.time, 6))
@@ -196,24 +249,27 @@ def partially_sort(arr, percent=80):
 
 
 if __name__ == "__main__":
-    size = 10000
+    size = 100000
     li = [randint(0, 10000) for _ in range(size)]
-    li = partially_sort(li)
+    # li = partially_sort(li)
     # print(li)
     # li.sort()
     # li = [10, 16, 25, 26, 27, 33, 45, 46, 46, 48, 49, 78, 60, 67, 51, 70, 88, 91, 94, 99]
     # li = [54, 26, 93, 17, 77, 31, 44, 55, 20]
     # li = [1, 3, 2, 4, 5, 5, 4, 5, 3, 4, 6, 7, 5, 8, 9, 8]
+    li = [i for i in "PYTHON"]
     s = Sort()
-    s.bubble(li.copy())
+    # s.bubble(li.copy())
+    # print(s)
+    # s.bubble_short(li.copy())
+    # print(s)
+    # s.selection(li.copy())
+    # print(s)
+    # s.insertion(li.copy())
+    # print(s)
+    # s.shell(li.copy())
+    # print(s)
+    print(s.merge(li.copy()))
     print(s)
-    s.bubble_short(li.copy())
-    print(s)
-    s.selection(li.copy())
-    print(s)
-    s.insertion(li.copy())
-    print(s)
-    s.shell(li.copy())
-    print(s)
-    s.merge(li.copy())
+    print(s.quick(li.copy()))
     print(s)
