@@ -355,3 +355,104 @@ class MaxHeap:
 
     def __str__(self):
         return " ".join(map(str, self.heap[1:]))
+
+
+class TreeNode:
+    def __init__(self, key, value, left=None, right=None, parent=None):
+        self.key = key
+        self.value = value
+        self.left = left
+        self.right = right
+        self.parent = parent
+
+    def has_left(self):
+        return self.left
+
+    def has_right(self):
+        return self.right
+
+    def is_left(self):
+        return self.parent and self.parent.has_left() == self
+
+    def is_right(self):
+        return self.parent and self.parent.has_right() == self
+
+    def is_root(self):
+        return not self.parent
+
+    def is_leaf(self):
+        return not (self.has_left() or self.has_right())
+
+    def has_any_children(self):
+        return not self.is_leaf()
+
+    def has_both_children(self):
+        return self.has_left() and self.has_right()
+
+    def set_node(self, key, value, left, right):
+        self.key = key
+        self.value = value
+        self.left = left
+        self.right = right
+        if self.has_left():
+            self.left.parent = self
+        if self.has_right():
+            self.right.parent = self
+
+
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None
+        self.size = 0
+
+    def __len__(self):
+        return self.size
+
+    def __iter__(self):
+        return self.root.__iter__()
+
+    def __setitem__(self, key, value):
+        self.put(key, value)
+
+    def __getitem__(self, key):
+        return self.get(key)
+
+    def put(self, key, value):
+        if self.root is None:
+            self.root = TreeNode(key, value)
+        else:
+            self._put(key, value, self.root)
+        self.size += 1
+
+    def _put(self, key, value, current_node):
+        if key < current_node.key:
+            if current_node.has_left():
+                self._put(key, value, current_node.has_left())
+            else:
+                current_node.left = TreeNode(key, value, parent=current_node)
+        else:
+            if current_node.has_right():
+                self._put(key, value, current_node.has_right())
+            else:
+                current_node.right = TreeNode(key, value, parent=current_node)
+
+    def get(self, key):
+        if self.root:
+            result = self._get(key, self.root)
+            if result:
+                return result.value
+            else:
+                return None
+        else:
+            return None
+
+    def _get(self, key, current_node):
+        if not current_node:
+            return None
+        elif current_node.key == key:
+            return current_node
+        elif key < current_node.key:
+            self._get(key, current_node.left)
+        else:
+            self._get(key, current_node.right)
+
