@@ -1,4 +1,4 @@
-from python.datastructures.DS import BinaryTree, MinHeap
+from python.datastructures.DS import BinaryTree, MinHeap, MaxHeap
 from random import randint, seed
 
 # s1 = ds.Stack()
@@ -39,9 +39,17 @@ from random import randint, seed
 #
 # bt.preorder()
 
-mh = MinHeap()
+# mh = MinHeap()
+# mh.heapify([randint(0, 100) for _ in range(100)])
+# # mh.insert()
+# # mh.remove()
+# print(mh)
+# print([mh.remove() for _ in range(101)])
+
+mh = MaxHeap()
 mh.heapify([randint(0, 100) for _ in range(100)])
-# mh.insert()
 # mh.remove()
+# mh.heapify([1, 4, 3, 5, 2, 4])
 print(mh)
-print([mh.remove() for _ in range(101)])
+print([mh.remove() for _ in range(100)])
+# print(mh)

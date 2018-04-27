@@ -1,5 +1,6 @@
 from random import randint
 
+
 class Stack:
     def __init__(self):
         self.stack = []
@@ -274,7 +275,8 @@ class MinHeap:
         self._percolate_up()
 
     def peek(self):
-        return self.heap[1]
+        if self.size >= 1:
+            return self.heap[1]
 
     def remove(self):
         if self.size >= 1:
@@ -284,6 +286,64 @@ class MinHeap:
             self.heap.pop()
             self._percolate_down(1)
             return result
+
+    def heapify(self, array):
+        i = len(array) // 2
+        self.heap = [0] + array[:]
+        self.size = len(array)
+        while i > 0:
+            self._percolate_down(i)
+            i -= 1
+
+    def __str__(self):
+        return " ".join(map(str, self.heap[1:]))
+
+
+class MaxHeap:
+    def __init__(self):
+        self.heap = [0]
+        self.size = 0
+
+    def _percolate_up(self):
+        i = self.size
+        while i//2 > 0:
+            if self.heap[i] > self.heap[i//2]:
+                self.heap[i], self.heap[i//2] = self.heap[i//2], self.heap[i]
+            i //= 2
+
+    def _percolate_down(self, i):
+        while 2*i <= self.size:
+            mc = self._max_child(i)
+            if self.heap[i] < self.heap[mc]:
+                self.heap[i], self.heap[mc] = self.heap[mc], self.heap[i]
+            i = mc
+
+    def _max_child(self, i):
+        if 2*i+1 > self.size:
+            return 2*i
+        else:
+            if self.heap[2*i] > self.heap[2*i+1]:
+                return 2*i
+            else:
+                return 2*i+1
+
+    def insert(self, value):
+        self.heap.append(value)
+        self.size += 1
+        self._percolate_up()
+
+    def remove(self):
+        if self.size >= 1:
+            result = self.heap[1]
+            self.heap[1] = self.heap[-1]
+            self.heap.pop()
+            self.size -= 1
+            self._percolate_down(1)
+            return result
+
+    def peek(self):
+        if self.size >= 1:
+            return self.heap[1]
 
     def heapify(self, array):
         i = len(array) // 2
