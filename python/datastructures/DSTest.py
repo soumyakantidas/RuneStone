@@ -1,6 +1,8 @@
 from python.datastructures.DS import BinaryTree, MinHeap, MaxHeap, BinarySearchTree
 from random import randint, seed
 
+seed(1)
+
 # s1 = ds.Stack()
 # print(s1.is_empty())
 # s1.push(4)
@@ -55,7 +57,30 @@ from random import randint, seed
 # # print(mh)
 
 bst = BinarySearchTree()
-bst[1] = 1
-bst[2] = 2
-bst[3] = 3
-print(bst[2])
+# for i in range(10):
+#     num = randint(1, 10)
+#     print(num)
+#     bst[num] = num
+#
+# print("pre-order:", bst.preorder())
+# print("in-order:", bst.inorder())
+# print("post-order:", bst.postorder())
+#
+# print(bst[20])
+# print(20 in bst)
+# bst[2] = 4
+# bst[3] = 9
+# bst[1] = 1
+# # bst[3] = 9
+# del bst[2]
+# print(bst[2])
+# print(bst[3])
+for i in [17, 5, 35, 2, 11, 29, 38, 9, 16, 7, 8]:
+    bst[i] = i
+
+print("pre-order:", bst.preorder())
+print("in-order:", bst.inorder())
+print("post-order:", bst.postorder())
+print(bst.height())
+# del bst[35]
+# print("pre-order:", bst.preorder())

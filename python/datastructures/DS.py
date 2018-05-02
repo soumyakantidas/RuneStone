@@ -399,6 +399,72 @@ class TreeNode:
         if self.has_right():
             self.right.parent = self
 
+    def preorder(self, node, li):
+        if node:
+            li.append(node.value)
+            self.preorder(node.left, li)
+            self.preorder(node.right, li)
+
+    def inorder(self, node, li):
+        if node:
+            self.inorder(node.left, li)
+            li.append(node.value)
+            self.inorder(node.right, li)
+
+    def postorder(self, node, li):
+        if node:
+            self.postorder(node.left, li)
+            self.postorder(node.right, li)
+            li.append(node.value)
+
+    def find_min(self):
+        current = self
+        while current.has_left():
+            current = current.left
+        return current
+
+    def find_successor(self):
+        successor = None
+        if self.has_right():
+            successor = self.right.find_min()
+        else:
+            if self.parent:
+                if self.is_left():
+                    successor = self.parent
+                else:
+                    self.parent.right = None
+                    successor = self.parent.find_successor()
+                    self.parent.right = self
+        return successor
+
+    def splice_out(self):
+        if self.is_leaf():
+            if self.is_left():
+                self.parent.left = None
+            else:
+                self.parent.right = None
+        else:
+            if self.has_left():
+                if self.is_left():
+                    self.parent.left = self.left
+                else:
+                    self.parent.right = self.left
+                self.left.parent = self.parent
+            else:
+                if self.is_left():
+                    self.parent.left = self.right
+                else:
+                    self.parent.right = self.right
+                self.right.parent = self.parent
+
+    def height(self, node):
+        if node:
+            h_left = self.height(node.left)
+            h_right = self.height(node.right)
+            return max(h_left, h_right) + 1
+        else:
+            return 0
+
 
 class BinarySearchTree:
     def __init__(self):
@@ -416,6 +482,12 @@ class BinarySearchTree:
 
     def __getitem__(self, key):
         return self.get(key)
+
+    def __contains__(self, key):
+        return True if self.get(key) else None
+
+    def __delitem__(self, key):
+            self.delete(key)
 
     def put(self, key, value):
         if self.root is None:
@@ -439,10 +511,7 @@ class BinarySearchTree:
     def get(self, key):
         if self.root:
             result = self._get(key, self.root)
-            if result:
-                return result.value
-            else:
-                return None
+            return result.value if result else None
         else:
             return None
 
@@ -452,7 +521,79 @@ class BinarySearchTree:
         elif current_node.key == key:
             return current_node
         elif key < current_node.key:
-            self._get(key, current_node.left)
+            return self._get(key, current_node.left)
         else:
-            self._get(key, current_node.right)
+            return self._get(key, current_node.right)
 
+    def delete(self, key):
+        if self.size > 1:
+            node_to_remove = self._get(key, self.root)
+            if node_to_remove:
+                self._remove(node_to_remove)
+                self.size -= 1
+            else:
+                raise KeyError("key not present")
+        elif self.size == 1 and self.root.key == key:
+            self.root = None
+            self.size -= 1
+        else:
+            raise KeyError("key not present")
+
+    @staticmethod
+    def _remove(node):
+        if node.is_leaf():
+            if node.is_left():
+                node.parent.left = None
+            else:
+                node.parent.right = None
+        elif node.has_both_children():
+            successor = node.find_successor()
+            successor.splice_out()
+            node.key = successor.key
+            node.value = successor.value
+        else:
+            if node.has_left():
+                if node.is_left():
+                    node.left.parent = node.parent
+                    node.parent.left = node.left
+                elif node.is_right():
+                    node.left.parent = node.parent
+                    node.parent.right = node.left
+                else:
+                    node.set_node(node.left.key, node.left.value, node.left.left, node.left.right)
+            else:
+                if node.is_left():
+                    node.right.parent = node.parent
+                    node.parent.left = node.right
+                elif node.is_right():
+                    node.right.parent = node.parent
+                    node.parent.right = node.right
+                else:
+                    node.set_node(node.right.key, node.right.value, node.right.left, node.right.right)
+
+    def preorder(self):
+        li = []
+        if self.root:
+            self.root.preorder(self.root, li)
+            return li
+        else:
+            raise KeyError("Tree is empty")
+
+    def inorder(self):
+        li = []
+        if self.root:
+            self.root.inorder(self.root, li)
+            return li
+        else:
+            raise KeyError("Tree is empty")
+
+    def postorder(self):
+        li = []
+        if self.root:
+            self.root.postorder(self.root, li)
+            return li
+        else:
+            raise KeyError("Tree is empty")
+
+    def height(self):
+        return self.root.height(self.root)
