@@ -1,5 +1,6 @@
-from python.datastructures.DS import BinaryTree, MinHeap, MaxHeap, BinarySearchTree
+from python.datastructures.DS import BinaryTree, MinHeap, MaxHeap, BinarySearchTree, Graph
 from random import randint, seed
+from math import log2
 
 seed(1)
 
@@ -56,10 +57,10 @@ seed(1)
 # print([mh.remove() for _ in range(100)])
 # # print(mh)
 
-bst = BinarySearchTree()
-# for i in range(10):
+# bst = BinarySearchTree()
+# for i in range(1000):
 #     num = randint(1, 10)
-#     print(num)
+#     # print(num)
 #     bst[num] = num
 #
 # print("pre-order:", bst.preorder())
@@ -75,12 +76,21 @@ bst = BinarySearchTree()
 # del bst[2]
 # print(bst[2])
 # print(bst[3])
-for i in [17, 5, 35, 2, 11, 29, 38, 9, 16, 7, 8]:
-    bst[i] = i
-
-print("pre-order:", bst.preorder())
-print("in-order:", bst.inorder())
-print("post-order:", bst.postorder())
-print(bst.height())
+# for i in [17, 5, 35, 2, 11, 29, 38, 9, 16, 7, 8]:
+#     bst[i] = i
+#
+# print("pre-order:", bst.preorder())
+# print("in-order:", bst.inorder())
+# print("post-order:", bst.postorder())
+# print(bst.height())
 # del bst[35]
 # print("pre-order:", bst.preorder())
+
+# print("Actual Height:", bst.height(), "Ideal Height:", round(log2(bst.size)))
+
+g = Graph()
+g.add_edge(1, 2, 4)
+g.add_edge(2, 3, 2)
+g.add_edge(3, 1, 5)
+g.add_edge(1, 4, 1)
+print(g)

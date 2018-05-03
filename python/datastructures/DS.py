@@ -358,6 +358,9 @@ class MaxHeap:
 
 
 class TreeNode:
+    """
+    TreeNode is a Binary Node class with key, value, left, right and parent parameters
+    """
     def __init__(self, key, value, left=None, right=None, parent=None):
         self.key = key
         self.value = value
@@ -463,7 +466,7 @@ class TreeNode:
             h_right = self.height(node.right)
             return max(h_left, h_right) + 1
         else:
-            return 0
+            return -1
 
 
 class BinarySearchTree:
@@ -492,9 +495,9 @@ class BinarySearchTree:
     def put(self, key, value):
         if self.root is None:
             self.root = TreeNode(key, value)
+            self.size += 1
         else:
             self._put(key, value, self.root)
-        self.size += 1
 
     def _put(self, key, value, current_node):
         if key < current_node.key:
@@ -502,11 +505,15 @@ class BinarySearchTree:
                 self._put(key, value, current_node.has_left())
             else:
                 current_node.left = TreeNode(key, value, parent=current_node)
+                self.size += 1
+        elif key == current_node.key:
+            current_node.value = value
         else:
             if current_node.has_right():
                 self._put(key, value, current_node.has_right())
             else:
                 current_node.right = TreeNode(key, value, parent=current_node)
+                self.size += 1
 
     def get(self, key):
         if self.root:
@@ -596,4 +603,56 @@ class BinarySearchTree:
             raise KeyError("Tree is empty")
 
     def height(self):
-        return self.root.height(self.root)
+        if self.size > 0:
+            return self.root.height(self.root)
+        else:
+            raise RuntimeError("Empty Tree")
+
+
+class Vertex:
+    def __init__(self, key):
+        self.key = key
+        self.connections = {}
+
+    def __str__(self):
+        return "{} connected to {}".format(self.key, list(self.connections.items()))
+
+    def add_neighbour(self, neighbour, weight=0):
+        self.connections[neighbour] = weight
+
+    def get_connections(self):
+        return self.connections.keys()
+
+    def get_weight(self, neighbour):
+        return self.connections[neighbour]
+
+
+class Graph:
+    def __init__(self):
+        self.vertices = {}
+        self.size = 0
+
+    def __contains__(self, key):
+        return key in self.vertices
+
+    def __str__(self):
+        result = []
+        for key in self.vertices.keys():
+            result.append(self.vertices[key].__str__())
+        return "\n".join(result)
+
+    def add_vertex(self, key):
+        self.vertices[key] = Vertex(key)
+
+    def get_vertex(self, key):
+        return self.vertices.get(key, None)
+
+    def add_edge(self, from_, to, weight=0):
+        if from_ not in self.vertices:
+            self.add_vertex(from_)
+        if to not in self.vertices:
+            self.add_vertex(to)
+        self.vertices[from_].add_neighbour(to, weight)
+
+    def get_vertices(self):
+        return self.vertices.keys()
